@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://komarev.com/ghpvc/?username=mannforcex&label=Profile%20Views&color=0e75b6&style=flat" alt="mannforcex" />
+  <img src="https://komarev.com/ghpvc/?username=mannforcex-cell&label=Profile%20Views&color=0e75b6&style=flat" alt="mannforcex" />
 </p>
 
 ---
@@ -28,7 +28,7 @@
 ### 📊 GitHub Stats
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=mannforcex&show_icons=true&theme=tokyonight" alt="GitHub Stats" />
+  <img src="https://github-readme-stats.vercel.app/api?username=mannforcex-cell&show_icons=true&theme=tokyonight" alt="GitHub Stats" />
 </p>
 
 <p align="center">
