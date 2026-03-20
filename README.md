@@ -49,7 +49,7 @@
   <a href="mailto:mannforcex@gmail.com" target="_blank">
     <img src="https://img.shields.io/badge/Email-000000?style=for-the-badge&logo=gmail&logoColor=00FF00" alt="Email" />
   </a>
-  <a href="LETAK_LINK_WHATSAPP_ABG_DI_SINI" target="_blank">
+  <a href="https://api.whatsapp.com/send?phone=+601139183035&text=" target="_blank">
     <img src="https://img.shields.io/badge/WhatsApp-000000?style=for-the-badge&logo=whatsapp&logoColor=00FF00" alt="WhatsApp" />
   </a>
   <a href="https://github.com/mannforcex-cell/Osint-Basic" target="_blank">
