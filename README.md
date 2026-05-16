@@ -24,7 +24,7 @@
 
 ```python
 class MrMann:
-    name       = "Mann"
+    name       = "Mann Force X Official"
     location   = "Kelantan, Malaysia 🇲🇾"
     role       = ["Cybersecurity Enthusiast", "Bot Developer", "Programmer"]
     os         = "Kali Linux 🐧"
