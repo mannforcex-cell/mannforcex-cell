@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MR. MANN — Cybersecurity Enthusiast</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --green: #00ff41;
+    --green-dim: #00aa2a;
+    --green-glow: #00ff4133;
+    --bg: #0a0a0a;
+    --bg2: #0d1117;
+    --text: #c9ffd8;
+    --red: #ff003c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--green);
+    font-family: 'Share Tech Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* SCANLINES */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.15) 2px,
+      rgba(0,0,0,0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+    animation: scanPan 8s linear infinite;
+  }
+
+  @keyframes scanPan {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100px; }
+  }
+
+  /* MATRIX CANVAS */
+  #matrix {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0.07;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .container {
+    position: relative;
+    z-index: 10;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    padding: 60px 0 40px;
+    position: relative;
+  }
+
+  .glitch {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 900;
+    color: var(--green);
+    text-shadow:
+      0 0 10px var(--green),
+      0 0 30px var(--green),
+      0 0 60px var(--green);
+    position: relative;
+    animation: glitchMain 4s infinite;
+    letter-spacing: 6px;
+  }
+
+  .glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+  }
+
+  .glitch::before {
+    color: var(--red);
+    animation: glitchTop 4s infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+  }
+
+  .glitch::after {
+    color: #00cfff;
+    animation: glitchBot 4s infinite;
+    clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+  }
+
+  @keyframes glitchMain {
+    0%, 90%, 100% { transform: translate(0); }
+    91% { transform: translate(-2px, 1px); }
+    93% { transform: translate(2px, -1px); }
+    95% { transform: translate(-1px, 2px); }
+  }
+  @keyframes glitchTop {
+    0%, 90%, 100% { transform: translate(0); opacity: 0; }
+    91% { transform: translate(-3px, 0); opacity: 0.8; }
+    93% { transform: translate(3px, 0); opacity: 0.6; }
+    95% { opacity: 0; }
+  }
+  @keyframes glitchBot {
+    0%, 90%, 100% { transform: translate(0); opacity: 0; }
+    92% { transform: translate(3px, 0); opacity: 0.8; }
+    94% { transform: translate(-3px, 0); opacity: 0.6; }
+    96% { opacity: 0; }
+  }
+
+  .subtitle {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+    color: var(--green-dim);
+    margin-top: 12px;
+    letter-spacing: 3px;
+    animation: blink 2s step-end infinite;
+  }
+
+  .location-tag {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 4px 16px;
+    border: 1px solid var(--green-dim);
+    color: var(--text);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    opacity: 0.7;
+  }
+
+  /* TYPING SVG */
+  .typing-wrap {
+    margin: 24px 0;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--green-dim);
+    margin: 32px 0;
+    position: relative;
+    opacity: 0.3;
+  }
+
+  /* ── TERMINAL BLOCK ── */
+  .terminal {
+    background: #0d1117;
+    border: 1px solid var(--green-dim);
+    border-radius: 4px;
+    padding: 24px;
+    margin: 32px 0;
+    position: relative;
+    box-shadow:
+      0 0 20px var(--green-glow),
+      inset 0 0 20px rgba(0,255,65,0.03);
+    animation: terminalFade 1s ease-out;
+  }
+
+  .terminal::before {
+    content: '● ● ●';
+    position: absolute;
+    top: 10px; left: 16px;
+    font-size: 0.6rem;
+    color: var(--green-dim);
+    letter-spacing: 4px;
+  }
+
+  .terminal-title {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--green-dim);
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+    margin-top: 4px;
+  }
+
+  @keyframes terminalFade {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  pre {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+
+  .kw { color: #ff79c6; }
+  .cn { color: #8be9fd; }
+  .st { color: #f1fa8c; }
+  .cm { color: #6272a4; }
+  .op { color: var(--green); }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.85rem;
+    color: var(--green);
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--green-dim), transparent);
+  }
+
+  /* ── SKILL BARS ── */
+  .skills-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 24px 0;
+  }
+
+  .skill-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 36px;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.8rem;
+    color: var(--text);
+  }
+
+  .skill-bar-bg {
+    background: #111;
+    height: 8px;
+    border: 1px solid #1a3a1a;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green-dim), var(--green));
+    box-shadow: 0 0 8px var(--green);
+    width: 0%;
+    transition: width 1.5s ease-out;
+    position: relative;
+  }
+
+  .skill-bar-fill::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0;
+    width: 3px; height: 100%;
+    background: #fff;
+    box-shadow: 0 0 6px var(--green);
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .skill-pct { color: var(--green); font-size: 0.75rem; }
+
+  /* ── BADGE GRID ── */
+  .badge-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0;
+  }
+
+  .badge {
+    padding: 6px 14px;
+    border: 1px solid var(--green-dim);
+    font-size: 0.75rem;
+    color: var(--green);
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .badge::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--green);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .badge:hover::before { transform: translateX(0); }
+  .badge:hover { color: #000; border-color: var(--green); }
+
+  /* ── STATS GRID ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  .stat-card {
+    border: 1px solid var(--green-dim);
+    padding: 16px;
+    text-align: center;
+    background: rgba(0,255,65,0.02);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(0,255,65,0.05) 0%, transparent 70%);
+    animation: rotateBg 6s linear infinite;
+  }
+
+  @keyframes rotateBg {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .stat-img { width: 100%; border: none; display: block; }
+
+  /* ── SOCIAL LINKS ── */
+  .social-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin: 28px 0;
+  }
+
+  .social-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 1px solid var(--green-dim);
+    color: var(--green);
+    text-decoration: none;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    transition: all 0.25s;
+    background: transparent;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .social-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--green);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 8px var(--green);
+  }
+
+  .social-btn:hover {
+    background: rgba(0,255,65,0.08);
+    box-shadow: 0 0 16px var(--green-glow);
+    color: #fff;
+  }
+
+  .social-btn:hover::after { width: 100%; }
+
+  .social-icon { width: 18px; height: 18px; fill: currentColor; }
+
+  /* ── GAME ── */
+  #game-section {
+    margin: 32px 0;
+  }
+
+  #gameCanvas {
+    display: block;
+    margin: 0 auto;
+    border: 1px solid var(--green-dim);
+    box-shadow: 0 0 24px var(--green-glow);
+    background: #050a05;
+    max-width: 100%;
+  }
+
+  .game-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--green-dim);
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid #1a2a1a;
+    font-size: 0.75rem;
+    color: var(--green-dim);
+    letter-spacing: 2px;
+  }
+
+  .blink { animation: blink 1s step-end infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* FADE IN SECTIONS */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="glitch" data-text="MR. MANN">MR. MANN</div>
+    <div class="subtitle">// CYBERSECURITY ENTHUSIAST & BOT DEVELOPER</div>
+    <div class="location-tag">📍 ANONYMOUS KELANTAN 🇲🇾</div>
+
+    <div class="typing-wrap">
+      <img src="https://readme-typing-svg.demolab.com?font=Share+Tech+Mono&weight=600&size=18&duration=3000&pause=1000&color=00FF41&center=true&vCenter=true&width=580&lines=Python+%7C+JavaScript+%7C+Bash;WhatsApp+%26+Telegram+Bot+Dev;OSINT+%7C+Ethical+Hacking+%7C+CTF;Learning+%26+Building+Every+Day+%F0%9F%94%90" alt="Typing" />
+    </div>
+
+    <img src="https://komarev.com/ghpvc/?username=mannforcex-cell&label=PROFILE+VIEWS&color=00ff41&style=flat-square" />
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- ABOUT -->
+  <div class="fade-in">
+    <div class="section-title">[ ABOUT.SH ]</div>
+    <div class="terminal">
+      <div class="terminal-title">mrmann@kali:~$ cat about.py</div>
+<pre>
+<span class="kw">class</span> <span class="cn">MrMann</span>:
+    name     <span class="op">=</span> <span class="st">"Mann"</span>
+    origin   <span class="op">=</span> <span class="st">"Kelantan, Malaysia 🇲🇾"</span>
+    role     <span class="op">=</span> <span class="st">"Cybersecurity Enthusiast & Bot Developer"</span>
+    stack    <span class="op">=</span> [<span class="st">"Python"</span>, <span class="st">"JavaScript"</span>, <span class="st">"HTML"</span>, <span class="st">"CSS"</span>, <span class="st">"Bash"</span>]
+    os       <span class="op">=</span> <span class="st">"Kali Linux"</span>
+    projects <span class="op">=</span> [<span class="st">"WhatsApp Bot"</span>, <span class="st">"Telegram Bot"</span>, <span class="st">"OSINT-Basic"</span>]
+    learning <span class="op">=</span> [<span class="st">"Penetration Testing"</span>, <span class="st">"Networking"</span>, <span class="st">"CTF"</span>]
+    motto    <span class="op">=</span> <span class="st">"Knowledge is the best weapon. 🔐"</span>
+
+    <span class="kw">def</span> <span class="cn">status</span>(<span class="kw">self</span>):
+        <span class="kw">return</span> <span class="st">"[ ONLINE ] — Always building, always learning."</span>
+</pre>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="fade-in">
+    <div class="section-title">[ SKILL_MATRIX.EXE ]</div>
+    <div class="skills-grid" id="skillBars">
+      <div class="skill-row"><span>Python</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="85"></div></div><span class="skill-pct">85%</span></div>
+      <div class="skill-row"><span>JavaScript</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="75"></div></div><span class="skill-pct">75%</span></div>
+      <div class="skill-row"><span>HTML / CSS</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="80"></div></div><span class="skill-pct">80%</span></div>
+      <div class="skill-row"><span>Bash / Linux</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="70"></div></div><span class="skill-pct">70%</span></div>
+      <div class="skill-row"><span>Bot Dev</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="90"></div></div><span class="skill-pct">90%</span></div>
+      <div class="skill-row"><span>OSINT</span><div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="65"></div></div><span class="skill-pct">65%</span></div>
+    </div>
+  </div>
+
+  <!-- TECH STACK -->
+  <div class="fade-in">
+    <div class="section-title">[ TOOLS_LOADED ]</div>
+    <div class="badge-grid">
+      <span class="badge">⚡ PYTHON</span>
+      <span class="badge">⚡ JAVASCRIPT</span>
+      <span class="badge">⚡ HTML5</span>
+      <span class="badge">⚡ CSS3</span>
+      <span class="badge">⚡ BASH</span>
+      <span class="badge">🐧 KALI LINUX</span>
+      <span class="badge">🤖 WA BOT</span>
+      <span class="badge">🤖 TG BOT</span>
+      <span class="badge">🔍 OSINT</span>
+      <span class="badge">🌐 NETWORKING</span>
+      <span class="badge">🏴 CTF</span>
+    </div>
+  </div>
+
+  <!-- GITHUB STATS -->
+  <div class="fade-in">
+    <div class="section-title">[ SYSTEM_DATA ]</div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <img class="stat-img" src="https://github-readme-stats.vercel.app/api?username=mannforcex-cell&show_icons=true&hide_border=true&bg_color=050a05&title_color=00ff41&icon_color=00ff41&text_color=c9ffd8" alt="stats"/>
+      </div>
+      <div class="stat-card">
+        <img class="stat-img" src="https://github-readme-streak-stats.herokuapp.com/?user=mannforcex-cell&hide_border=true&background=050a05&ring=00ff41&fire=00ff41&currStreakNum=c9ffd8&sideNums=c9ffd8&currStreakLabel=00ff41&sideLabels=00ff41&dates=c9ffd8" alt="streak"/>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:12px;">
+      <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=mannforcex-cell&layout=compact&hide_border=true&bg_color=050a05&title_color=00ff41&text_color=c9ffd8" alt="langs"/>
+    </div>
+  </div>
+
+  <!-- MINI GAME -->
+  <div class="fade-in" id="game-section">
+    <div class="section-title">[ MINI_GAME.EXE — DEFEND THE TERMINAL ]</div>
+    <canvas id="gameCanvas" width="700" height="220"></canvas>
+    <div class="game-info">
+      <span>← → MOVE &nbsp;|&nbsp; SPACE SHOOT</span>
+      <span id="scoreDisplay">SCORE: 0 &nbsp;|&nbsp; LIVES: ♥♥♥</span>
+      <span>DEFEND THE SYSTEM</span>
+    </div>
+  </div>
+
+  <!-- SOCIAL -->
+  <div class="fade-in">
+    <div class="section-title">[ ESTABLISH_CONNECTION ]</div>
+    <div class="social-grid">
+      <a class="social-btn" href="https://instagram.com/imann.man__" target="_blank">
+        <svg class="social-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        INSTAGRAM
+      </a>
+      <a class="social-btn" href="https://tiktok.com/@mannforcex._0901" target="_blank">
+        <svg class="social-icon" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+        TIKTOK
+      </a>
+      <a class="social-btn" href="mailto:mannforcex@gmail.com" target="_blank">
+        <svg class="social-icon" viewBox="0 0 24 24"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.909 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
+        EMAIL
+      </a>
+      <a class="social-btn" href="https://api.whatsapp.com/send?phone=+601139183035" target="_blank">
+        <svg class="social-icon" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        WHATSAPP
+      </a>
+      <a class="social-btn" href="https://github.com/mannforcex-cell/Osint-Basic" target="_blank">
+        <svg class="social-icon" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        OSINT-BASIC
+      </a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer fade-in">
+    <p>[ ACCESS GRANTED ] &nbsp;—&nbsp; KEEP LEARNING. KEEP BUILDING. 🔐</p>
+    <p style="margin-top:8px;">mrmann@kali:~$ <span class="blink">█</span></p>
+  </div>
+
+</div>
+
+<script>
+// ── MATRIX RAIN ──
+const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+
+function resizeMatrix() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeMatrix();
+window.addEventListener('resize', resizeMatrix);
+
+const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?/\\~`01'.split('');
+const fontSize = 14;
+let drops = [];
+
+function initDrops() {
+  const cols = Math.floor(canvas.width / fontSize);
+  drops = Array(cols).fill(1);
+}
+initDrops();
+window.addEventListener('resize', initDrops);
+
+function drawMatrix() {
+  ctx.fillStyle = 'rgba(0,0,0,0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#00ff41';
+  ctx.font = fontSize + 'px Share Tech Mono';
+  drops.forEach((y, i) => {
+    const char = chars[Math.floor(Math.random() * chars.length)];
+    ctx.fillStyle = Math.random() > 0.95 ? '#ffffff' : '#00ff41';
+    ctx.fillText(char, i * fontSize, y * fontSize);
+    if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  });
+}
+setInterval(drawMatrix, 50);
+
+// ── SKILL BARS ──
+function animateSkills() {
+  document.querySelectorAll('.skill-bar-fill').forEach(bar => {
+    const pct = bar.dataset.pct;
+    setTimeout(() => { bar.style.width = pct + '%'; }, 300);
+  });
+}
+
+// ── INTERSECTION OBSERVER ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      if (entry.target.querySelector('.skill-bar-fill')) animateSkills();
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ── MINI GAME ──
+const gc = document.getElementById('gameCanvas');
+const gx = gc.getContext('2d');
+
+const GW = gc.width, GH = gc.height;
+let score = 0, lives = 3, gameOver = false;
+
+const player = { x: GW/2 - 18, y: GH - 50, w: 36, h: 20, speed: 5 };
+const bullets = [], enemies = [], particles = [];
+let enemyDir = 1, enemySpeed = 0.6;
+const keys = {};
+
+// Init enemies
+function initEnemies() {
+  for (let r = 0; r < 3; r++) {
+    for (let c = 0; c < 9; c++) {
+      enemies.push({ x: 60 + c*60, y: 30 + r*30, w:20, h:14, alive:true });
+    }
+  }
+}
+initEnemies();
+
+document.addEventListener('keydown', e => {
+  keys[e.code] = true;
+  if (e.code === 'Space') {
+    e.preventDefault();
+    bullets.push({ x: player.x + player.w/2 - 2, y: player.y, w:4, h:10, speed:8, type:'player' });
+  }
+  if (e.code === 'KeyR' && gameOver) resetGame();
+});
+document.addEventListener('keyup', e => keys[e.code] = false);
+
+// Touch controls
+let touchStartX = null;
+gc.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+gc.addEventListener('touchmove', e => {
+  if (!touchStartX) return;
+  const dx = e.touches[0].clientX - touchStartX;
+  player.x = Math.max(0, Math.min(GW - player.w, player.x + dx * 0.5));
+  touchStartX = e.touches[0].clientX;
+  e.preventDefault();
+}, { passive: false });
+gc.addEventListener('touchend', () => {
+  bullets.push({ x: player.x + player.w/2 - 2, y: player.y, w:4, h:10, speed:8, type:'player' });
+});
+
+function spawnParticles(x, y, count) {
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x, y,
+      vx: (Math.random()-0.5)*4,
+      vy: (Math.random()-0.5)*4,
+      life: 30 + Math.random()*20,
+      maxLife: 50,
+      color: Math.random() > 0.5 ? '#00ff41' : '#ffffff'
+    });
+  }
+}
+
+function resetGame() {
+  score = 0; lives = 3; gameOver = false;
+  enemies.length = 0; bullets.length = 0; particles.length = 0;
+  enemySpeed = 0.6; enemyDir = 1;
+  player.x = GW/2 - 18;
+  initEnemies();
+}
+
+let enemyBulletTimer = 0;
+
+function update() {
+  if (gameOver) return;
+
+  // Move player
+  if (keys['ArrowLeft'] || keys['KeyA']) player.x = Math.max(0, player.x - player.speed);
+  if (keys['ArrowRight'] || keys['KeyD']) player.x = Math.min(GW - player.w, player.x + player.speed);
+
+  // Move bullets
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    const b = bullets[i];
+    b.y += b.type === 'player' ? -b.speed : b.speed;
+    if (b.y < 0 || b.y > GH) bullets.splice(i, 1);
+  }
+
+  // Move enemies
+  const alive = enemies.filter(e => e.alive);
+  if (alive.length === 0) { initEnemies(); enemySpeed += 0.2; return; }
+
+  const leftmost = Math.min(...alive.map(e => e.x));
+  const rightmost = Math.max(...alive.map(e => e.x + e.w));
+  let dropDown = false;
+  if (rightmost >= GW - 10 && enemyDir === 1) { enemyDir = -1; dropDown = true; }
+  if (leftmost <= 10 && enemyDir === -1) { enemyDir = 1; dropDown = true; }
+
+  enemies.forEach(e => {
+    if (!e.alive) return;
+    e.x += enemyDir * enemySpeed;
+    if (dropDown) e.y += 12;
+    if (e.y + e.h >= player.y) { lives = 0; }
+  });
+
+  // Enemy shoot
+  enemyBulletTimer++;
+  if (enemyBulletTimer > 60) {
+    enemyBulletTimer = 0;
+    const shooters = alive.filter(e => e.alive);
+    if (shooters.length > 0) {
+      const shooter = shooters[Math.floor(Math.random() * shooters.length)];
+      bullets.push({ x: shooter.x + shooter.w/2 - 2, y: shooter.y + shooter.h, w:4, h:10, speed:3, type:'enemy' });
+    }
+  }
+
+  // Collisions
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    const b = bullets[i];
+    if (b.type === 'player') {
+      for (let j = 0; j < enemies.length; j++) {
+        const e = enemies[j];
+        if (e.alive && b.x < e.x+e.w && b.x+b.w > e.x && b.y < e.y+e.h && b.y+b.h > e.y) {
+          e.alive = false;
+          spawnParticles(e.x + e.w/2, e.y + e.h/2, 10);
+          bullets.splice(i, 1);
+          score += 10;
+          enemySpeed = Math.min(enemySpeed + 0.05, 4);
+          break;
+        }
+      }
+    } else {
+      if (b.x < player.x+player.w && b.x+b.w > player.x && b.y < player.y+player.h && b.y+b.h > player.y) {
+        spawnParticles(player.x + player.w/2, player.y + player.h/2, 8);
+        bullets.splice(i, 1);
+        lives--;
+      }
+    }
+  }
+
+  // Particles
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx; p.y += p.vy; p.life--;
+    if (p.life <= 0) particles.splice(i, 1);
+  }
+
+  if (lives <= 0) gameOver = true;
+
+  // Update score display
+  document.getElementById('scoreDisplay').textContent =
+    `SCORE: ${score} | LIVES: ${'♥'.repeat(Math.max(0,lives))}${'♡'.repeat(Math.max(0,3-lives))}`;
+}
+
+function drawGame() {
+  gx.clearRect(0, 0, GW, GH);
+
+  // Background grid
+  gx.strokeStyle = 'rgba(0,255,65,0.04)';
+  gx.lineWidth = 1;
+  for (let x = 0; x < GW; x += 30) { gx.beginPath(); gx.moveTo(x,0); gx.lineTo(x,GH); gx.stroke(); }
+  for (let y = 0; y < GH; y += 30) { gx.beginPath(); gx.moveTo(0,y); gx.lineTo(GW,y); gx.stroke(); }
+
+  if (gameOver) {
+    gx.fillStyle = '#00ff41';
+    gx.font = 'bold 28px Orbitron, monospace';
+    gx.textAlign = 'center';
+    gx.shadowColor = '#00ff41';
+    gx.shadowBlur = 20;
+    gx.fillText('GAME OVER', GW/2, GH/2 - 20);
+    gx.font = '14px Share Tech Mono';
+    gx.shadowBlur = 0;
+    gx.fillStyle = '#00aa2a';
+    gx.fillText(`FINAL SCORE: ${score}`, GW/2, GH/2 + 10);
+    gx.fillText('PRESS R TO RESTART', GW/2, GH/2 + 35);
+    gx.textAlign = 'left';
+    return;
+  }
+
+  // Player (triangle ship)
+  gx.fillStyle = '#00ff41';
+  gx.shadowColor = '#00ff41';
+  gx.shadowBlur = 12;
+  gx.beginPath();
+  gx.moveTo(player.x + player.w/2, player.y);
+  gx.lineTo(player.x, player.y + player.h);
+  gx.lineTo(player.x + player.w, player.y + player.h);
+  gx.closePath();
+  gx.fill();
+  gx.shadowBlur = 0;
+
+  // Enemies
+  enemies.forEach(e => {
+    if (!e.alive) return;
+    gx.fillStyle = '#00ff41';
+    gx.shadowColor = '#00ff41';
+    gx.shadowBlur = 6;
+    // Invader shape
+    gx.fillRect(e.x+3, e.y, e.w-6, e.h-4);
+    gx.fillRect(e.x, e.y+3, e.w, e.h-8);
+    gx.fillRect(e.x+1, e.y+e.h-4, 5, 4);
+    gx.fillRect(e.x+e.w-6, e.y+e.h-4, 5, 4);
+    gx.shadowBlur = 0;
+  });
+
+  // Bullets
+  bullets.forEach(b => {
+    gx.fillStyle = b.type === 'player' ? '#ffffff' : '#ff003c';
+    gx.shadowColor = b.type === 'player' ? '#ffffff' : '#ff003c';
+    gx.shadowBlur = 8;
+    gx.fillRect(b.x, b.y, b.w, b.h);
+    gx.shadowBlur = 0;
+  });
+
+  // Particles
+  particles.forEach(p => {
+    const alpha = p.life / p.maxLife;
+    gx.globalAlpha = alpha;
+    gx.fillStyle = p.color;
+    gx.fillRect(p.x - 2, p.y - 2, 4, 4);
+  });
+  gx.globalAlpha = 1;
+}
+
+function gameLoop() {
+  update();
+  drawGame();
+  requestAnimationFrame(gameLoop);
+}
+gameLoop();
+</script>
+</body>
+</html>
